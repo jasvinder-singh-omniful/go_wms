@@ -1,0 +1,55 @@
+services:
+  postgres_master:
+    image: 'public.ecr.aws/bitnami/postgresql:latest'
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=${REPLICATE_USER}
+      - POSTGRESQL_REPLICATION_PASSWORD=${REPLICATE_PASSWORD}
+      - POSTGRESQL_USERNAME=${POSTGRES_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRESQL_DATABASE=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_master_data:/bitnami/postgresql
+
+  postgres_slave1:
+    image: 'public.ecr.aws/bitnami/postgresql:latest'
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_MASTER_HOST=postgres_master
+      - POSTGRESQL_MASTER_PORT_NUMBER=5432
+      - POSTGRESQL_REPLICATION_USER=${REPLICATE_USER}
+      - POSTGRESQL_REPLICATION_PASSWORD=${REPLICATE_PASSWORD}
+      - POSTGRESQL_USERNAME=${POSTGRES_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRESQL_DATABASE=${POSTGRES_DB}
+    depends_on:
+      - postgres_master
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_replica1_data:/bitnami/postgresql
+
+  postgres_slave2:
+    image: 'public.ecr.aws/bitnami/postgresql:latest'
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_MASTER_HOST=postgres_master
+      - POSTGRESQL_MASTER_PORT_NUMBER=5432
+      - POSTGRESQL_REPLICATION_USER=${REPLICATE_USER}
+      - POSTGRESQL_REPLICATION_PASSWORD=${REPLICATE_PASSWORD}
+      - POSTGRESQL_USERNAME=${POSTGRES_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRESQL_DATABASE=${POSTGRES_DB}
+    depends_on:
+      - postgres_master
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg_replica2_data:/bitnami/postgresql
+
+volumes:
+  pg_master_data:
+  pg_replica1_data:
+  pg_replica2_data:

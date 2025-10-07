@@ -6,6 +6,7 @@ import (
 
 	"github.com/omniful/go_commons/log"
 	"github.com/singhJasvinder101/go_wms/models"
+	"gorm.io/gorm"
 )
 
 
@@ -37,6 +38,9 @@ func (r *SKURepo) GetByIDs(ctx context.Context, tenantID, sellerID string, skuCo
 
 	var skus []models.SKU
 	if err := db.Where("tenant_id = ? AND seller_id = ? AND sku_codes = (?)", tenantID, sellerID, skuCodes).Find(&skus).Error; err != nil {
+		if err == gorm.ErrRecordNotFound{
+			return nil, fmt.Errorf("no record found with tenant_id = %s AND seller_id = %s AND sku_codes = %v", tenantID, sellerID, skuCodes)
+		}
 		log.ErrorfWithContext(ctx, logTag+" error when getting sku by ids in db", err)
 		return nil, fmt.Errorf("error when getting sku by ids in db %v", err)	
 	}

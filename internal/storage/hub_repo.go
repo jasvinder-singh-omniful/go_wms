@@ -6,6 +6,7 @@ import (
 
 	"github.com/omniful/go_commons/log"
 	"github.com/singhJasvinder101/go_wms/models"
+	"gorm.io/gorm"
 )
 
 
@@ -36,6 +37,9 @@ func (r *HubRepo) GetByID(ctx context.Context, id uint) (*models.Hub, error) {
 
 	var hub models.Hub
 	if err := db.First(&hub).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, fmt.Errorf("no hub found with id %d", id)
+		}
 		log.ErrorfWithContext(ctx, logTag+" error when finding hub in db", err)
 		return nil, fmt.Errorf("error when fetching hub by id %v", err)
 	}

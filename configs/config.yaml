@@ -3,6 +3,9 @@ env: "local"
 http_server:
   host: "localhost"
   port: 3000
+  read_timeout: "10s"
+  write_timeout: "10s" 
+  idle_timeout: "60s"
 
 postgres:
   master:

@@ -45,11 +45,12 @@ func (s *HubService) GetHubByID(ctx context.Context, id uint) (*models.Hub, erro
     log.InfofWithContext(ctx, logTag+" fetching hub by ID %d", id)
 
     hub, err := s.HubRepo.GetByID(ctx, id)
+
     if err != nil {
         log.ErrorfWithContext(ctx, logTag+" failed to fetch hub %v", err)
         return nil, fmt.Errorf("failed to fetch hub %w", err)
     }
-
+    
     return hub, nil
 }
 

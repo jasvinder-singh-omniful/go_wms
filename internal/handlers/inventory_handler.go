@@ -18,47 +18,6 @@ func NewInventoryHandler(inventoryService *services.InventoryService) *Inventory
     }
 }
 
-type CreateInventoryRequest struct {
-    TenantID string `json:"tenant_id" validate:"required"`
-    SellerID string `json:"seller_id" validate:"required"`
-    SKUCode  string `json:"sku_code" validate:"required,min=1"`
-    HubID    int    `json:"hub_id" validate:"required,min=1"`
-    Quantity int64  `json:"quantity" validate:"required,min=0"`
-}
-
-type UpsertInventoryRequest struct {
-    TenantID string `json:"tenant_id" validate:"required"`
-    SellerID string `json:"seller_id" validate:"required"`
-    SKUCode  string `json:"sku_code" validate:"required,min=1"`
-    HubID    int    `json:"hub_id" validate:"required,min=1"`
-    Quantity int64  `json:"quantity" validate:"required,min=0"`
-}
-
-type GetInventoryRequest struct {
-    TenantID string   `json:"tenant_id" validate:"required"`
-    SellerID string   `json:"seller_id" validate:"required"`
-    HubID    int      `json:"hub_id" validate:"required,min=1"`
-    SKUCodes []string `json:"sku_codes,omitempty" validate:"omitempty,min=1,max=100,dive,required,min=1"`
-}
-
-type UpdateInventoryQuantityRequest struct {
-    HubID    uint   `json:"hub_id" validate:"required,min=1"`
-    SellerID string `json:"seller_id" validate:"required"`
-    SKUCode  string `json:"sku_code" validate:"required,min=1"`
-    Quantity int    `json:"quantity" validate:"required"`
-}
-
-type InventoryResponse struct {
-    ID       uint   `json:"id"`
-    SKUID    int    `json:"sku_id"`
-    HubID    int    `json:"hub_id"`
-    Quantity int64  `json:"quantity"`
-}
-
-type InventoryItem struct {
-    SKU       string `json:"sku"`
-    Inventory int64  `json:"inventory"`
-}
 
 func (h *InventoryHandler) CreateInventory(c *gin.Context) {
     ctx := c.Request.Context()
@@ -87,6 +46,7 @@ func (h *InventoryHandler) CreateInventory(c *gin.Context) {
 			"error":  err.ErrorMessage(),
 			"errors": err.ErrorMap(),
 		})
+        return
 	}
 
     inventory, err := h.InventoryService.CreateInventory(ctx, body.TenantID, body.SellerID, body.SKUCode, body.HubID, body.Quantity)
@@ -210,7 +170,7 @@ func (h *InventoryHandler) UpdateInventoryQuantity(c *gin.Context) {
     var body struct {
 		HubID    uint   `json:"hub_id" validate:"required,min=1"`
 		SellerID string `json:"seller_id" validate:"required"`
-		SKUCode  string `json:"sku_code" validate:"required,min=1"`
+		SkuID  int `json:"sku_id" validate:"required,min=1"`
 		Quantity int    `json:"quantity" validate:"required"`
 	}
     if err := c.ShouldBindJSON(&body); err != nil {
@@ -229,7 +189,7 @@ func (h *InventoryHandler) UpdateInventoryQuantity(c *gin.Context) {
 		})
 	}
 
-    err := h.InventoryService.UpdateInventoryQuantity(ctx, body.HubID, body.SellerID, body.SKUCode, body.Quantity)
+    err := h.InventoryService.UpdateInventoryQuantity(ctx, body.HubID, body.SellerID, body.SkuID, body.Quantity)
     if err != nil {
         log.ErrorfWithContext(ctx, logTag+" failed to update inventory quantity %v", err)
         c.JSON(http.StatusInternalServerError.Code(), gin.H{

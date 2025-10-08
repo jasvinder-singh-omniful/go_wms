@@ -14,6 +14,12 @@ type HubRepo struct {
 	DB *Postgres
 }
 
+func NewHubRepo(db *Postgres) *HubRepo {
+	return &HubRepo{
+		DB: db,
+	}
+}
+
 func (r *HubRepo) Create(ctx context.Context, hub *models.Hub) error {
 	logTag := "[HubRepo][Create]"
 	log.InfofWithContext(ctx, logTag+" creating hub iin database ", "hub", hub)
@@ -36,15 +42,16 @@ func (r *HubRepo) GetByID(ctx context.Context, id uint) (*models.Hub, error) {
 	db := r.DB.Cluster.GetSlaveDB(ctx)
 
 	var hub models.Hub
-	if err := db.First(&hub).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, fmt.Errorf("no hub found with id %d", id)
-		}
-		log.ErrorfWithContext(ctx, logTag+" error when finding hub in db", err)
-		return nil, fmt.Errorf("error when fetching hub by id %v", err)
-	}
+	if err := db.Where("id = ?", id).First(&hub).Error; err != nil {
+        if err == gorm.ErrRecordNotFound {
+            return nil, fmt.Errorf("no hub found with id %d", id)
+        }
+        log.ErrorfWithContext(ctx, logTag+" error when finding hub in db", err)
+        return nil, fmt.Errorf("error when fetching hub by id: %v", err)
+    }
 
-	log.InfofWithContext(ctx, "hub fetched successfully")
+
+	log.InfofWithContext(ctx, "hub fetched successfully", "hub", hub)
 	return &hub, nil
 }
 

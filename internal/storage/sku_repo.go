@@ -14,6 +14,12 @@ type SKURepo struct {
 	DB *Postgres
 }
 
+func NewSKURepo(db *Postgres) *SKURepo {
+	return &SKURepo{
+		DB: db,
+	}
+}
+
 
 func (r *SKURepo) Create(ctx context.Context, sku *models.SKU) error {
 	logTag := "[SKURepo][Create]"
@@ -37,7 +43,7 @@ func (r *SKURepo) GetByCodes(ctx context.Context, tenantID, sellerID string, sku
 	db := r.DB.Cluster.GetSlaveDB(ctx)
 
 	var skus []models.SKU
-	if err := db.Where("tenant_id = ? AND seller_id = ? AND sku_codes = (?)", tenantID, sellerID, skuCodes).Find(&skus).Error; err != nil {
+	if err := db.Where("tenant_id = ? AND seller_id = ? AND sku_code in (?)", tenantID, sellerID, skuCodes).Find(&skus).Error; err != nil {
 		if err == gorm.ErrRecordNotFound{
 			return nil, fmt.Errorf("no record found with tenant_id = %s AND seller_id = %s AND sku_codes = %v", tenantID, sellerID, skuCodes)
 		}

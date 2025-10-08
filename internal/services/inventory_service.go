@@ -38,9 +38,12 @@ func (s *InventoryService) CreateInventory(ctx context.Context, tenantId, seller
 	}
 	skuID := skus[0].ID
 
+
 	inventory := &models.Inventory{
-		SKUID:    int(skuID),
+		TenantID: tenantId,
 		HubID:    hubId,
+		SellerID: sellerId,
+		SKUID:    int(skuID),
 		Quantity: quantity,
 	}
 
@@ -68,6 +71,8 @@ func (s *InventoryService) UpsertInventory(ctx context.Context, tenantID, seller
 	}
 	skuID := skus[0].ID
 
+	log.InfofWithContext(ctx, logTag+" here is sku_id", skuID)
+
 	_, err = s.HubRepo.GetByID(ctx, uint(hubId))
 	if err != nil {
 		log.ErrorfWithContext(ctx, logTag+" failed to get Hub ID %v", err)
@@ -75,30 +80,32 @@ func (s *InventoryService) UpsertInventory(ctx context.Context, tenantID, seller
 	}
 
 	inventory := &models.Inventory{
-		SKUID:    int(skuID),
+		TenantID: tenantID,
 		HubID:    hubId,
+		SellerID: sellerID,
+		SKUID:    int(skuID),
 		Quantity: quantity,
 	}
 
 	if err := s.InventoryRepo.Upsert(ctx, inventory); err != nil {
 		log.ErrorfWithContext(ctx, logTag+" failed to upsert inventory in database: %v", err)
-		return nil, fmt.Errorf("failed to upsert inventory: %w", err)
+		return nil, fmt.Errorf("failed to upsert inventory %w", err)
 	}
 
 	log.InfofWithContext(ctx, logTag+" inventory upserted successfully")
 	return inventory, nil
 }
 
-func (s *InventoryService) UpdateInventoryQuantity(ctx context.Context, hubID uint, sellerID string, skuCode string, quantity int) error {
+func (s *InventoryService) UpdateInventoryQuantity(ctx context.Context, hubID uint, sellerID string, skuID int, quantity int) error {
 	logTag := "[InventoryService][UpdateInventoryQuantity]"
 	log.InfofWithContext(ctx, logTag+" updating inventory quantities for hub %d, seller %s", hubID, sellerID)
 
 
-	if err := s.InventoryRepo.UpdateQuantity(ctx, hubID, sellerID, skuCode, int(quantity)); err != nil {
-		log.ErrorfWithContext(ctx, logTag+" failed to update inventory for SKU %s: %v", skuCode, err)
-		return fmt.Errorf("failed to update inventory for SKU %s: %w", skuCode, err)
+	if err := s.InventoryRepo.UpdateQuantity(ctx, hubID, sellerID, skuID, int(quantity)); err != nil {
+		log.ErrorfWithContext(ctx, logTag+" failed to update inventory for SKU %s: %v", skuID, err)
+		return fmt.Errorf("failed to update inventory for SKU %s: %w", skuID, err)
 	}
-	log.InfofWithContext(ctx, logTag+" updated inventory for SKU %s, quantity: %d", skuCode, quantity)
+	log.InfofWithContext(ctx, logTag+" updated inventory for SKU %s, quantity: %d", skuID, quantity)
 
 	return nil
 }

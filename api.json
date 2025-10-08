@@ -1,0 +1,680 @@
+{
+    "info": {
+        "_postman_id": "wms-api-collection",
+        "name": "WMS API Collection",
+        "description": "Warehouse Management System API endpoints for testing",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Health Check",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/health",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "health"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Hub Management",
+            "item": [
+                {
+                    "name": "Create Hub",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"name\": \"Mumbai Warehouse\",\n    \"location\": {\n        \"address\": \"Plot 123, Industrial Area\",\n        \"city\": \"Mumbai\",\n        \"state\": \"Maharashtra\",\n        \"country\": \"India\",\n        \"pincode\": \"400001\",\n        \"latitude\": 19.0760,\n        \"longitude\": 72.8777\n    }\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hubs/create",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hubs",
+                                "create"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Hub by ID",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hubs/get",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hubs",
+                                "get"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Hubs",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hubs/getall",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hubs",
+                                "getall"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Validate Hub",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"hub_id\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hubs/validate",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hubs",
+                                "validate"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "SKU Management",
+            "item": [
+                {
+                    "name": "Create SKU",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"seller_id\": \"seller_001\",\n    \"sku_code\": \"SKU_12345\",\n    \"name\": \"Premium Headphones\",\n    \"metadata\": {\n        \"brand\": \"TechBrand\",\n        \"category\": \"Electronics\",\n        \"weight\": \"0.5kg\",\n        \"dimensions\": \"20x15x8cm\",\n        \"price\": 2999.99,\n        \"description\": \"Wireless Bluetooth headphones with noise cancellation\"\n    }\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/skus/create",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "skus",
+                                "create"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get SKUs by Codes",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"seller_id\": \"seller_001\",\n    \"sku_codes\": [\"SKU_12345\", \"SKU_67890\", \"SKU_11111\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/skus/get",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "skus",
+                                "get"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Validate SKUs",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"seller_id\": \"seller_001\",\n    \"sku_codes\": [\"SKU_12345\", \"SKU_INVALID\", \"SKU_67890\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/skus/validate",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "skus",
+                                "validate"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Inventory Management",
+            "item": [
+                {
+                    "name": "Create Inventory",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"seller_id\": \"seller_001\",\n    \"sku_code\": \"SKU_12345\",\n    \"hub_id\": 1,\n    \"quantity\": 100\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inventory/create",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "inventory",
+                                "create"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Upsert Inventory",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"seller_id\": \"seller_001\",\n    \"sku_code\": \"SKU_12345\",\n    \"hub_id\": 1,\n    \"quantity\": 150\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inventory/upsert",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "inventory",
+                                "upsert"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Inventory - All SKUs for Hub",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"seller_id\": \"seller_001\",\n    \"hub_id\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inventory/get",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "inventory",
+                                "get"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Inventory - Specific SKUs",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"tenant_001\",\n    \"seller_id\": \"seller_001\",\n    \"hub_id\": 1,\n    \"sku_codes\": [\"SKU_12345\", \"SKU_67890\", \"SKU_NONEXISTENT\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inventory/get",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "inventory",
+                                "get"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Inventory Quantity - Reduce",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"hub_id\": 1,\n    \"seller_id\": \"seller_001\",\n    \"sku_code\": \"SKU_12345\",\n    \"quantity\": 5\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inventory/update-quantity",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "inventory",
+                                "update-quantity"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Integration Testing",
+            "item": [
+                {
+                    "name": "Complete Flow Test",
+                    "item": [
+                        {
+                            "name": "1. Create Hub",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"tenant_id\": \"test_tenant\",\n    \"name\": \"Test Hub Delhi\",\n    \"location\": {\n        \"address\": \"Industrial Area, Gurgaon\",\n        \"city\": \"Gurgaon\",\n        \"state\": \"Haryana\",\n        \"country\": \"India\",\n        \"pincode\": \"122001\"\n    }\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/hubs/create",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "hubs",
+                                        "create"
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "2. Create Multiple SKUs",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"tenant_id\": \"test_tenant\",\n    \"seller_id\": \"test_seller\",\n    \"sku_code\": \"TEST_SKU_001\",\n    \"name\": \"Test Product 1\",\n    \"metadata\": {\n        \"category\": \"Electronics\",\n        \"price\": 1999.99\n    }\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/skus/create",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "skus",
+                                        "create"
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "3. Create Inventory",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"tenant_id\": \"test_tenant\",\n    \"seller_id\": \"test_seller\",\n    \"sku_code\": \"TEST_SKU_001\",\n    \"hub_id\": 1,\n    \"quantity\": 50\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/inventory/create",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "inventory",
+                                        "create"
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "4. Check Inventory",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"tenant_id\": \"test_tenant\",\n    \"seller_id\": \"test_seller\",\n    \"hub_id\": 1,\n    \"sku_codes\": [\"TEST_SKU_001\"]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/inventory/get",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "inventory",
+                                        "get"
+                                    ]
+                                }
+                            },
+                            "response": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Error Testing",
+            "item": [
+                {
+                    "name": "Invalid Hub Creation - Missing Fields",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Incomplete Hub\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hubs/create",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hubs",
+                                "create"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid SKU Creation - Invalid Data",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"test_tenant\",\n    \"seller_id\": \"\",\n    \"sku_code\": \"\",\n    \"name\": \"A\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/skus/create",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "skus",
+                                "create"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Invalid Inventory - Negative Quantity",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"tenant_id\": \"test_tenant\",\n    \"seller_id\": \"test_seller\",\n    \"sku_code\": \"TEST_SKU_001\",\n    \"hub_id\": 0,\n    \"quantity\": -10\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inventory/create",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "inventory",
+                                "create"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Non-existent Hub",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"id\": 99999\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/hubs/get",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "hubs",
+                                "get"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080",
+            "type": "string"
+        },
+        {
+            "key": "tenant_id",
+            "value": "tenant_001",
+            "type": "string"
+        },
+        {
+            "key": "seller_id",
+            "value": "seller_001",
+            "type": "string"
+        },
+        {
+            "key": "hub_id",
+            "value": "1",
+            "type": "string"
+        }
+    ]
+}

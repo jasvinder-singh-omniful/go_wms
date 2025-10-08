@@ -8,6 +8,9 @@ import (
 type ServerConfig struct {
 	Host string
 	Port string
+	ReadTimeout string
+	WriteTimeout string
+	IdleTimeout  string
 }
 
 type AWSConfig struct {

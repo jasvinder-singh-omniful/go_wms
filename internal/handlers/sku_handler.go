@@ -46,6 +46,7 @@ func (h *SKUHandler) CreateSKU(c *gin.Context) {
 			"error":  err.ErrorMessage(),
 			"errors": err.ErrorMap(),
 		})
+		return
 	}
 
 	sku, err := h.SKUService.CreateSKU(ctx, body.TenantID, body.SellerID, body.SKUCode, body.Name, body.Metadata)

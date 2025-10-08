@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	"github.com/omniful/go_commons/log"
 	"github.com/omniful/go_commons/validator"
@@ -14,6 +16,12 @@ type HubHandler struct {
 	HubService *services.HubService
 }
 
+func NewHubHandler(hubService *services.HubService) *HubHandler {
+	return &HubHandler{
+		HubService: hubService,
+	}
+}
+
 func (h *HubHandler) CreateHub(c *gin.Context) {
 	ctx := c.Request.Context()
 
@@ -21,9 +29,9 @@ func (h *HubHandler) CreateHub(c *gin.Context) {
 	log.InfofWithContext(ctx, logTag+" creating hub")
 
 	var body struct {
-		TenantId string `json:"tenant_id" validate:"required,alpha"`
-		Name     string `json:"name" validate:"required,alpha"`
-		Location string `json:"location" validate:"required"`
+		TenantId string `json:"tenant_id" validate:"required"`
+		Name     string `json:"name" validate:"required"`
+		Location datatypes.JSON `json:"location" validate:"required"`
 	}
 	
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -32,6 +40,7 @@ func (h *HubHandler) CreateHub(c *gin.Context) {
 			"message": "please write valid input",
 			"error":   err.Error(),
 		})
+		return
 	}
 	
 	if err := validator.ValidateStruct(ctx, body); err.Exists() {
@@ -40,25 +49,27 @@ func (h *HubHandler) CreateHub(c *gin.Context) {
 			"message": "please write valid input",
 			"error":   err.Error(),
 		})
+		return
 	}
 
 	hub, err := h.HubService.CreateHub(ctx, body.TenantId, body.Name, datatypes.JSON(body.Location))
 	if err != nil {
 		log.ErrorfWithContext(ctx, logTag+" failed to get hub: %v", err)
-        c.JSON(http.StatusNotFound.Code(), gin.H{
-            "error": "Hub not found",
-        })
-        return
+		c.JSON(http.StatusNotFound.Code(), gin.H{
+			"error": "Hub not found",
+		})
+		return
 	}
 
-	response := gin.H{
-        "Id":       hub.ID,
-        "TenantID": hub.TenantID,
-        "Name":     hub.Name,
-        "Location": hub.Location,
-    }
 
-    c.JSON(http.StatusOK.Code(), response)
+	response := gin.H{
+		"Id":       hub.ID,
+		"TenantID": hub.TenantID,
+		"Name":     hub.Name,
+		"Location": hub.Location,
+	}
+
+	c.JSON(http.StatusOK.Code(), response)
 }
 
 func (h *HubHandler) GetHub(c *gin.Context){
@@ -88,18 +99,23 @@ func (h *HubHandler) GetHub(c *gin.Context){
 
 	hub, err := h.HubService.GetHubByID(ctx, body.ID)
     if err != nil {
-        log.ErrorfWithContext(ctx, logTag+" failed to get hub: %v", err)
+        log.ErrorfWithContext(ctx, logTag+" failed to get hub %v", err)
         c.JSON(http.StatusNotFound.Code(), gin.H{
             "error": "Hub not found",
         })
         return
     }
 
+	var location json.RawMessage
+	if len(hub.Location) > 0 {
+		location = json.RawMessage(hub.Location)
+	}
+
     response := &gin.H{
         "ID":       hub.ID,
         "TenantID": hub.TenantID,
         "Name":     hub.Name,
-        "Location": hub.Location,
+        "Location": location,
     }
 
     c.JSON(http.StatusOK.Code(), response)

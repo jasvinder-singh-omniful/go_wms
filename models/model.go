@@ -30,8 +30,10 @@ type SKU struct {
 type Inventory struct {
 	ID        int       `gorm:"primaryKey;autoIncrement" json:"id"`
 
-	SKUID     int       `gorm:"not null;" json:"sku_id"`
+	TenantID  string    `gorm:"not null;" json:"tenant_id"`
+	SellerID  string    `gorm:"not null;" json:"seller_id"`
 	HubID     int       `gorm:"not null;" json:"hub_id"`
+	SKUID     int       `gorm:"not null;" json:"sku_id"`
 	Quantity  int64     `gorm:"not null;default:0;check:quantity>=0" json:"quantity"`
 	
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`

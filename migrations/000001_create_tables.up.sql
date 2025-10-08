@@ -29,8 +29,10 @@ create index if not exists idx_skus_tenant_seller on skus(tenant_id, seller_id);
 create table if not exists inventory (
     id bigserial primary key,
 
-    sku_id int not null references skus(id) on delete cascade,
+    tenant_id text not null,
+    seller_id text not null,
     hub_id int not null references hubs(id) on delete cascade,
+    sku_id int not null references skus(id) on delete cascade,
     quantity bigint not null default 0,
 
     updated_at timestamp with time zone default now(),

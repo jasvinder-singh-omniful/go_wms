@@ -30,7 +30,7 @@ func (r *SKURepo) Create(ctx context.Context, sku *models.SKU) error {
 	return nil
 }
 
-func (r *SKURepo) GetByIDs(ctx context.Context, tenantID, sellerID string, skuCodes []string) ([]models.SKU, error){
+func (r *SKURepo) GetByCodes(ctx context.Context, tenantID, sellerID string, skuCodes []string) ([]models.SKU, error){
 	logTag := "[SKURepo][GetByIDs]"
 	log.InfofWithContext(ctx, logTag+" geting sku by ids in database ", "tenant_id", tenantID, "seller_id", sellerID, "sku_codes", skuCodes)
 

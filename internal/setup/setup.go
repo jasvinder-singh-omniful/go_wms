@@ -30,6 +30,7 @@ func SetupRoutes(server *http.Server, hubHandler *handlers.HubHandler, skuHandle
 			inventoryRoutes.POST("/create", inventoryHandler.CreateInventory)
 			inventoryRoutes.PATCH("/upsert", inventoryHandler.UpsertInventory)
 			inventoryRoutes.POST("/get", inventoryHandler.GetInventory)
+			inventoryRoutes.POST("/getbyskus", inventoryHandler.GetInventoryBySKUs)
 			inventoryRoutes.PATCH("/update-quantity", inventoryHandler.UpdateInventoryQuantity)
 		}
 	}

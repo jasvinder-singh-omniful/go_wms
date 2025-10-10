@@ -29,11 +29,11 @@ func (h *HubHandler) CreateHub(c *gin.Context) {
 	log.InfofWithContext(ctx, logTag+" creating hub")
 
 	var body struct {
-		TenantId string `json:"tenant_id" validate:"required"`
-		Name     string `json:"name" validate:"required"`
+		TenantId string         `json:"tenant_id" validate:"required"`
+		Name     string         `json:"name" validate:"required"`
 		Location datatypes.JSON `json:"location" validate:"required"`
 	}
-	
+
 	if err := c.ShouldBindJSON(&body); err != nil {
 		log.ErrorfWithContext(ctx, logTag+" failed to bind json%v", err)
 		c.JSON(http.StatusBadRequest.Code(), gin.H{
@@ -42,7 +42,7 @@ func (h *HubHandler) CreateHub(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	if err := validator.ValidateStruct(ctx, body); err.Exists() {
 		log.ErrorfWithContext(ctx, logTag+" please enter valid input %v", err)
 		c.JSON(http.StatusBadRequest.Code(), gin.H{
@@ -61,7 +61,6 @@ func (h *HubHandler) CreateHub(c *gin.Context) {
 		return
 	}
 
-
 	response := gin.H{
 		"Id":       hub.ID,
 		"TenantID": hub.TenantID,
@@ -72,68 +71,69 @@ func (h *HubHandler) CreateHub(c *gin.Context) {
 	c.JSON(http.StatusOK.Code(), response)
 }
 
-func (h *HubHandler) GetHub(c *gin.Context){
+func (h *HubHandler) GetHub(c *gin.Context) {
 	ctx := c.Request.Context()
-    logTag := "[HubHandler][GetHub]"
-    
-    var body struct {
-        ID uint `uri:"id" validate:"required,min=1"`
-    }
+	logTag := "[HubHandler][GetHub]"
+
+	var body struct {
+		ID uint `uri:"id" validate:"required,min=1"`
+	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-        log.ErrorfWithContext(ctx, logTag+" failed to bind json%v", err)
+		log.ErrorfWithContext(ctx, logTag+" failed to bind json%v", err)
 		c.JSON(http.StatusBadRequest.Code(), gin.H{
 			"error": err.Error(),
 		})
-        return
-    }
-	
+		return
+	}
+
 	if err := validator.ValidateStruct(ctx, body); err.Exists() {
 		log.ErrorfWithContext(ctx, logTag+" please enter valid input %v", err)
-        c.JSON(http.StatusBadRequest.Code(), gin.H{
-            "error": err.ErrorMessage(),
-            "errors": err.ErrorMap(),
-        })
+		c.JSON(http.StatusBadRequest.Code(), gin.H{
+			"error":  err.ErrorMessage(),
+			"errors": err.ErrorMap(),
+		})
 		return
 	}
 
 	hub, err := h.HubService.GetHubByID(ctx, body.ID)
-    if err != nil {
-        log.ErrorfWithContext(ctx, logTag+" failed to get hub %v", err)
-        c.JSON(http.StatusNotFound.Code(), gin.H{
-            "error": "Hub not found",
-        })
-        return
-    }
+	if err != nil {
+		log.ErrorfWithContext(ctx, logTag+" failed to get hub %v", err)
+		c.JSON(http.StatusNotFound.Code(), gin.H{
+			"error": "Hub not found",
+		})
+		return
+	}
 
 	var location json.RawMessage
 	if len(hub.Location) > 0 {
 		location = json.RawMessage(hub.Location)
 	}
 
-    response := &gin.H{
-        "ID":       hub.ID,
-        "TenantID": hub.TenantID,
-        "Name":     hub.Name,
-        "Location": location,
-    }
+	response := gin.H{
+		"id":         hub.ID,
+		"tenant_id":  hub.TenantID,
+		"name":       hub.Name,
+		"location":   location,
+		"created_at": hub.CreatedAt,
+	}
 
-    c.JSON(http.StatusOK.Code(), response)
+	c.JSON(http.StatusOK.Code(), response)
 }
 
-func (h *HubHandler) GetAllHubs(c *gin.Context){
+func (h *HubHandler) GetAllHubs(c *gin.Context) {
 	ctx := c.Request.Context()
-    logTag := "[HubHandler][GetAllHubs]"
-    log.InfofWithContext(ctx, logTag+" fetching all hubs")
+	logTag := "[HubHandler][GetAllHubs]"
+	log.InfofWithContext(ctx, logTag+" fetching all hubs")
 
 	hubs, err := h.HubService.GetAllHubs(ctx)
-    if err != nil {
-        log.ErrorfWithContext(ctx, logTag+" failed to get hubs: %v", err)
-        c.JSON(http.StatusInternalServerError.Code(), gin.H{
-            "error": "Failed to fetch hubs",
-        })
-        return
-    }
+	if err != nil {
+		log.ErrorfWithContext(ctx, logTag+" failed to get hubs: %v", err)
+		c.JSON(http.StatusInternalServerError.Code(), gin.H{
+			"error": "Failed to fetch hubs",
+		})
+		return
+	}
 
 	var response []gin.H
 	for _, hub := range hubs {
@@ -145,10 +145,8 @@ func (h *HubHandler) GetAllHubs(c *gin.Context){
 		})
 	}
 
-    c.JSON(http.StatusOK.Code(), gin.H{
-        "hubs": response,
-        "count": len(response),
-    })
+	c.JSON(http.StatusOK.Code(), gin.H{
+		"hubs":  response,
+		"count": len(response),
+	})
 }
-
-

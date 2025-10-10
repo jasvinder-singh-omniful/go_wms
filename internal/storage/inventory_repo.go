@@ -73,6 +73,41 @@ func (r *InventoryRepo) GetByHubAndSeller(ctx context.Context, hubID int, seller
 	return inventory, nil
 }
 
+func (r *InventoryRepo) GetByHubSellerSKUs(ctx context.Context, hubID int, sellerID string, skuCodes []string) ([]struct{
+	SKU string
+	Quantity int64
+}, error) {
+	logTag := "[SKURepo][GetByHubSellerSKUs]"
+	log.InfofWithContext(ctx, logTag+" updating sku in db", "hub_id", hubID, "seller_id", sellerID)
+	
+	db := r.DB.Cluster.GetSlaveDB(ctx)
+
+	var inventory []struct{
+		SKU string
+		Quantity int64
+	}
+
+	query := db.Table("inventory AS i").
+		Select("s.sku_code AS sku, i.quantity").
+		Joins("JOIN skus AS s ON s.id = i.sku_id").
+		Where("i.hub_id = ? AND i.seller_id = ?", hubID, sellerID)
+
+	if len(skuCodes) > 0 {
+        query = query.Where("s.sku_code IN ?", skuCodes)
+    }
+
+	if err := query.Find(&inventory).Error; err != nil {
+		if err == gorm.ErrRecordNotFound{
+			return nil, fmt.Errorf("no record found with hub_id %d and seller_id %s", hubID, sellerID)
+		}
+		log.ErrorfWithContext(ctx, logTag+" error when getting inventory by hub_id and seller_id", err)
+		return nil, fmt.Errorf("error when getting inventory by hub_id and seller_id %v", err)
+	}
+
+	log.InfofWithContext(ctx, logTag+" fetching inventory successfully", inventory)
+	return inventory, nil
+}
+
 func (r *InventoryRepo) UpdateQuantity(ctx context.Context, hubID uint, sellerID string, skuID int, quantity int) error {
 	logTag := "[SKURepo][GetByHubAndSeller]"
 	log.InfofWithContext(ctx, logTag+" updating sku in db", "hub_id", hubID, "seller_id", sellerID, "sku_code", skuID, "quantity", quantity)

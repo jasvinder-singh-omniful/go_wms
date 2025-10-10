@@ -181,8 +181,10 @@ github.com/newrelic/go-agent/v3/integrations/nrpkgerrors v1.1.0 h1:TmAihIxCqgz3v
 github.com/newrelic/go-agent/v3/integrations/nrpkgerrors v1.1.0/go.mod h1:yXUqcAzlKNVIsSyoaI2ILdpvBeMCz3Ko/ASl4Vbg2i4=
 github.com/newrelic/go-agent/v3/integrations/nrpq v1.1.1 h1:HlVcLXw7ZZPjeRx3lQUAN8qfpJVDmuq4L237M1+PS8A=
 github.com/newrelic/go-agent/v3/integrations/nrpq v1.1.1/go.mod h1:UvI7Z0Dok/36E44UiTysh9HQZudDdpiChbe3+eqSB0I=
-github.com/omniful/go_commons v0.6.85 h1:LBvzH2998BJYnu+OkxkssjlYdn1xy00+vmeVBWbrf18=
-github.com/omniful/go_commons v0.6.85/go.mod h1:bEEJYDNSMcapaf0GmDxyxCnmjOg8DAorPMsxJwjxaCg=
+github.com/omniful/go_commons v0.6.86 h1:vHIXaSJ20xiiBsjbaNXylSdL7zHfC63WoOrCd0FcUBU=
+github.com/omniful/go_commons v0.6.86/go.mod h1:bEEJYDNSMcapaf0GmDxyxCnmjOg8DAorPMsxJwjxaCg=
+github.com/omniful/go_commons v0.6.88 h1:3buTn6WqM7WtHEyxPD9Iwe20IqJ4oUGXDzr3OGDQYaM=
+github.com/omniful/go_commons v0.6.88/go.mod h1:bEEJYDNSMcapaf0GmDxyxCnmjOg8DAorPMsxJwjxaCg=
 github.com/pelletier/go-toml/v2 v2.2.2 h1:aYUidT7k73Pcl9nb2gScu7NSrKCSHIDE89b3+6Wq+LM=
 github.com/pelletier/go-toml/v2 v2.2.2/go.mod h1:1t835xjRzz80PqgE6HHgN2JOsmgYu/h4qDAS4n929Rs=
 github.com/pierrec/lz4/v4 v4.1.22 h1:cKFw6uJDK+/gfw5BcDL0JL5aBsAFdsIT18eRtLj7VIU=

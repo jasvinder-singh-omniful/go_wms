@@ -4,7 +4,7 @@ go 1.25.1
 
 require (
 	github.com/gin-gonic/gin v1.10.1
-	github.com/omniful/go_commons v0.6.85
+	github.com/omniful/go_commons v0.6.88
 	gorm.io/datatypes v1.2.7
 	gorm.io/gorm v1.30.0
 )

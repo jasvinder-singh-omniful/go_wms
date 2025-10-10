@@ -162,6 +162,49 @@ func (h *InventoryHandler) GetInventory(c *gin.Context) {
     })
 }
 
+func (h *InventoryHandler) GetInventoryBySKUs(c *gin.Context) {
+    ctx := c.Request.Context()
+    logTag := "[InventoryHandler][GetInventory]"
+    log.InfofWithContext(ctx, logTag+" getting inventory")
+
+    var body struct {
+		TenantID string   `json:"tenant_id" validate:"required"`
+		SellerID string   `json:"seller_id" validate:"required"`
+		HubID    int      `json:"hub_id" validate:"required,min=1"`
+		SKUCodes []string `json:"sku_codes,omitempty" validate:"omitempty,min=1,max=100,dive,required,min=1"`
+	}
+
+    if err := c.ShouldBindJSON(&body); err != nil {
+		log.ErrorfWithContext(ctx, logTag+" failed to bind JSON %v", err)
+		c.JSON(http.StatusBadRequest.Code(), gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := validator.ValidateStruct(ctx, body); err.Exists() {
+		log.ErrorfWithContext(ctx, logTag+" plaes enter vlaid input %v", err)
+		c.JSON(http.StatusBadRequest.Code(), gin.H{
+			"error":  err.ErrorMessage(),
+			"errors": err.ErrorMap(),
+		})
+	}
+
+    inventoryList, err := h.InventoryService.InventoryRepo.GetByHubSellerSKUs(ctx, body.HubID, body.SellerID, body.SKUCodes)
+    if err != nil {
+        log.ErrorfWithContext(ctx, logTag+" failed to get inventory: %v", err)
+        c.JSON(http.StatusInternalServerError.Code(), gin.H{
+            "error": "Failed to fetch inventory",
+        })
+        return
+    }
+
+    c.JSON(http.StatusOK.Code(), gin.H{
+        "items": inventoryList,
+        "count": len(inventoryList),
+    })
+}
+
 func (h *InventoryHandler) UpdateInventoryQuantity(c *gin.Context) {
     ctx := c.Request.Context()
     logTag := "[InventoryHandler][UpdateInventoryQuantity]"

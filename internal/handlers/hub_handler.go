@@ -7,6 +7,7 @@ import (
 	"github.com/omniful/go_commons/log"
 	"github.com/omniful/go_commons/validator"
 	"github.com/singhJasvinder101/go_wms/internal/services"
+	"github.com/singhJasvinder101/go_wms/utils"
 	"gorm.io/datatypes"
 
 	"github.com/omniful/go_commons/http"
@@ -110,15 +111,15 @@ func (h *HubHandler) GetHub(c *gin.Context) {
 		location = json.RawMessage(hub.Location)
 	}
 
-	response := gin.H{
-		"id":         hub.ID,
-		"tenant_id":  hub.TenantID,
-		"name":       hub.Name,
-		"location":   location,
-		"created_at": hub.CreatedAt,
-	}
+	responseData := gin.H{
+        "id":         hub.ID,
+        "tenant_id":  hub.TenantID,
+        "name":       hub.Name,
+        "location":   location,
+        "created_at": hub.CreatedAt,
+    }
 
-	c.JSON(http.StatusOK.Code(), response)
+    utils.SuccessReponse(c, http.StatusOK, responseData)
 }
 
 func (h *HubHandler) GetAllHubs(c *gin.Context) {

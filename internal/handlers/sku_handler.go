@@ -6,6 +6,7 @@ import (
 	"github.com/omniful/go_commons/log"
 	"github.com/omniful/go_commons/validator"
 	"github.com/singhJasvinder101/go_wms/internal/services"
+	"github.com/singhJasvinder101/go_wms/utils"
 	"gorm.io/datatypes"
 )
 
@@ -119,8 +120,15 @@ func (h *SKUHandler) GetSKUsByCodes(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK.Code(), gin.H{
-		"skus":  response,
+	// imp: unexpected end of JSON input when doing interserver requests
+	if response == nil {
+		response = []gin.H{}
+	}
+
+	responseData := gin.H{
 		"count": len(response),
-	})
+		"skus":  response,
+	}
+
+	utils.SuccessReponse(c, http.StatusOK, responseData)
 }

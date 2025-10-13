@@ -1,11 +1,14 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/omniful/go_commons/http"
 	"github.com/omniful/go_commons/log"
 	"github.com/omniful/go_commons/validator"
 	"github.com/singhJasvinder101/go_wms/internal/services"
+	"github.com/singhJasvinder101/go_wms/utils"
 )
 
 type InventoryHandler struct {
@@ -199,10 +202,11 @@ func (h *InventoryHandler) GetInventoryBySKUs(c *gin.Context) {
         return
     }
 
-    c.JSON(http.StatusOK.Code(), gin.H{
+	response := gin.H{
         "items": inventoryList,
         "count": len(inventoryList),
-    })
+    }
+    utils.SuccessReponse(c, http.StatusOK, response)
 }
 
 func (h *InventoryHandler) UpdateInventoryQuantity(c *gin.Context) {
@@ -232,6 +236,7 @@ func (h *InventoryHandler) UpdateInventoryQuantity(c *gin.Context) {
 		})
 	}
 
+	fmt.Println("here is body", body)
     err := h.InventoryService.UpdateInventoryQuantity(ctx, body.HubID, body.SellerID, body.SkuID, body.Quantity)
     if err != nil {
         log.ErrorfWithContext(ctx, logTag+" failed to update inventory quantity %v", err)
@@ -242,7 +247,15 @@ func (h *InventoryHandler) UpdateInventoryQuantity(c *gin.Context) {
     }
 
     log.InfofWithContext(ctx, logTag+" inventory quantity updated successfully")
-    c.JSON(http.StatusOK.Code(), gin.H{
+
+	response := gin.H{
         "message": "Inventory quantity updated successfully",
-    })
+        "sku_id": body.SkuID,
+        "hub_id": body.HubID,
+        "seller_id": body.SellerID,
+        "quantity_change": body.Quantity,
+    }
+
+
+    utils.SuccessReponse(c, http.StatusOK, response)
 }

@@ -11,12 +11,13 @@ import (
 )
 
 type InterSvcResponse struct {
-	IsSuccess  bool
-	StatusCode int
-	Data       json.RawMessage
-	Meta       map[string]interface{}
-	Error      json.RawMessage
+    IsSuccess  bool                   `json:"is_success"`
+    StatusCode int                    `json:"status_code"`
+    Data       json.RawMessage        `json:"data"`
+    Meta       map[string]interface{} `json:"meta"`
+    Error      json.RawMessage        `json:"error"`
 }
+
 
 func SuccessReponse(c *gin.Context, status http.StatusCode, data interface{}) {
 	dataBytes, _ := json.Marshal(data)

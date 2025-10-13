@@ -39,6 +39,7 @@ type Inventory struct {
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
+
 func (Inventory) TableName() string {
     return "inventory"
 }

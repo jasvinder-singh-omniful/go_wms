@@ -114,10 +114,27 @@ func (r *InventoryRepo) UpdateQuantity(ctx context.Context, hubID uint, sellerID
 	
 	db := r.DB.Cluster.GetMasterDB(ctx)
 
+	var count int64
+    err := db.Model(&models.Inventory{}).
+        Where("hub_id = ? AND seller_id = ? AND sku_id = ?", hubID, sellerID, skuID).
+        Count(&count).Error
+    
+    if err != nil {
+        log.ErrorfWithContext(ctx, logTag+" error checking inventory existence: %v", err)
+        return fmt.Errorf("error checking inventory existence: %w", err)
+    }
+
+    if count == 0 {
+        log.ErrorfWithContext(ctx, logTag+" no inventory record found for hub_id=%d, seller_id=%s, sku_id=%d", 
+            hubID, sellerID, skuID)
+        return fmt.Errorf("inventory not found for hub_id=%d, seller_id=%s, sku_id=%d", 
+            hubID, sellerID, skuID)
+    }
+
 
 	if err := db.Model(&models.Inventory{}).
-		Where("hub_id = ? AND seller_id = ? AND sku_id = ?", hubID, sellerID, skuID).
-		Update("quantity", gorm.Expr("quantity - ?", quantity)).Error; err != nil {
+        Where("hub_id = ? AND seller_id = ? AND sku_id = ?", hubID, sellerID, skuID).
+        Update("quantity", gorm.Expr("quantity + ?", quantity)) .Error; err != nil {
 			log.ErrorfWithContext(ctx, logTag+" error when updating inventory by hub_id and seller_id", err)
 			return fmt.Errorf("error when updating inventory by hub_id, seller_id, skuID, and quanity %v", err)
 		}
